@@ -97,7 +97,7 @@ function showProfile(p){
  const price=document.createElement('h3');price.textContent='NZ$'+p.rate_nzd+' per session';
  const note=document.createElement('p');note.className='muted';note.textContent='This profile has not been identity verified. Online booking is coming soon.';
  content.append(makePhoto(p),heading,loc,price,bio,note);profileDialog.showModal();
-}}
+}
 api.auth.onAuthStateChange((_event,session)=>setUser(session?.user||null));
 api.auth.getSession().then(({data,error})=>{if(error)authMessage.textContent=error.message;setUser(data?.session?.user||null)});
 loadSitters();
