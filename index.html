@@ -77,7 +77,26 @@ header{padding:16px 5%;gap:10px}header .brand{width:100%}.authbar{margin-left:0;
 main{padding:32px 5% 40px}h2{font-size:25px}.filters{padding:13px}.filters select,.filters input{flex-basis:100%;width:100%}dialog{padding:20px}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
-</style></head><body><header><b class="brand">🐾 PawLocal<span>NZ</span></b><span>Pet care, close to home</span><div class="authbar" id="authBar"><button id="openAuth" type="button" onclick="document.getElementById('authDialog').showModal()">Sign up / Log in</button></div><button id="becomeSitter" type="button" onclick="document.getElementById('sitterDialog').showModal()">Become a Sitter</button></header><section class="hero"><div class="hero-inner"><div class="hero-copy"><strong>Pet care made simple in Auckland</strong><h1>Their new favourite human.<br><em>Just around the corner.</em></h1><p>Book local dog walking, pet sitting and boarding with people who care.</p><button onclick="document.querySelector('#sitters').scrollIntoView({behavior:'smooth'})">Find a pet sitter →</button><small class="hero-note">A little local care. A lot of love.</small></div><div class="hero-illustration" aria-hidden="true"><div class="hero-emoji">🐶</div><span class="hero-heart">♥</span><span class="hero-caption">Good company. Happy paws.</span></div></div></section><div class="trustline"><span>📍 Auckland locals</span><span>🐾 Pet sitting & dog walking</span><span>🗓️ Easy booking requests</span></div><main id="sitters"><section id="realSitters" style="margin-bottom:35px"><span class="section-kicker">Your neighbourhood, their happy place</span><h2>Meet your local pet people</h2><p class="muted">Profiles created by registered members. Identity and experience are not yet verified.</p><div id="realCards" class="grid"></div><p id="sitterLoadStatus" role="status"></p></section><span class="section-kicker">Find their perfect match</span><h2>A little care for every kind of pet</h2><p class="muted">Prototype listings only — people and reviews are fictional.</p><div class="filters"><select id="suburb" onchange="render()"><option value="">All Auckland suburbs</option><option>Mount Eden</option><option>Ponsonby</option><option>Grey Lynn</option><option>Newmarket</option></select><select id="service" onchange="render()"><option value="">All services</option><option>Dog walking</option><option>Pet sitting</option><option>Boarding</option></select><input id="max" type="number" min="0" placeholder="Max NZ$ / session" oninput="render()"><button onclick="reset()">Reset</button></div><div id="cards" class="grid"></div></main><dialog id="booking"><form id="request"><h2 id="bookingTitle">Request a booking</h2><p class="muted">Demo only. No request is actually sent.</p><label>Your name<input name="name" required placeholder="Full name"></label><label>Date<input type="date" name="date" required></label><label>Message<textarea name="message" required placeholder="Tell the sitter about your pet"></textarea></label><button type="submit">Preview request</button> <button type="button" onclick="booking.close()" style="background:#77867e">Cancel</button></form></dialog><footer><b>🐾 PawLocal NZ</b><span>Made for pets. Rooted in your neighbourhood.</span><span>Early prototype · Payments not supported</span></footer><script>const sitters=[{name:"Sophie",suburb:"Mount Eden",service:"Dog walking",rate:25,pet:"🐕",bio:"Gentle neighbourhood walks and plenty of play time."},{name:"James",suburb:"Ponsonby",service:"Pet sitting",rate:35,pet:"🐈",bio:"Home visits for cats and dogs while you're away."},{name:"Mia",suburb:"Grey Lynn",service:"Boarding",rate:55,pet:"🐶",bio:"A calm home-away-from-home for your best friend."},{name:"Liam",suburb:"Newmarket",service:"Dog walking",rate:28,pet:"🦮",bio:"Active walks for energetic pups."},{name:"Olivia",suburb:"Mount Eden",service:"Pet sitting",rate:38,pet:"🐱",bio:"Thoughtful care and regular photo updates."},{name:"Noah",suburb:"Ponsonby",service:"Boarding",rate:60,pet:"🐕‍🦺",bio:"Weekend and overnight stays in a pet-friendly home."}];function render(){let suburb=document.querySelector('#suburb').value,service=document.querySelector('#service').value,max=document.querySelector('#max').value;let data=sitters.filter(s=>(!suburb||s.suburb===suburb)&&(!service||s.service===service)&&(!max||s.rate<=+max));document.querySelector('#cards').innerHTML=data.length?data.map((s,i)=>'<article class="card"><div class="avatar">'+s.pet+'</div><h3>'+s.name+'</h3><p class="muted">📍 '+s.suburb+' · '+s.service+'</p><p>'+s.bio+'</p><p class="price">NZ$'+s.rate+' <small>/ session</small></p><button onclick="book(\''+s.name+'\')">Request booking</button></article>').join(''):'<p>No sitters match these filters.</p>'}function reset(){document.querySelector('#suburb').value='';document.querySelector('#service').value='';document.querySelector('#max').value='';render()}function book(name){document.querySelector('#bookingTitle').textContent='Request '+name;document.querySelector('#booking').showModal()}document.querySelector('#request').addEventListener('submit',e=>{e.preventDefault();alert('Demo request previewed! No message was sent.');document.querySelector('#booking').close()});render()</script><dialog id="sitterDialog"><h2>Become a Sitter</h2><p class="muted">Create or update your public profile. Do not share your full address.</p><form id="sitterForm"><label>Display name<input name="display_name" minlength="2" maxlength="80" required></label><label>Suburb<select name="suburb" required><option>Mount Eden</option><option>Ponsonby</option><option>Grey Lynn</option><option>Newmarket</option><option>Other Auckland</option></select></label><label>Service<select name="service" required><option>Dog walking</option><option>Pet sitting</option><option>Boarding</option></select></label><label>Rate (NZ$ per session)<input name="rate_nzd" type="number" min="1" max="1000" required></label><label>Profile photo (JPG, PNG or WebP, maximum 5 MB)<input name="photo" type="file" accept="image/jpeg,image/png,image/webp"></label><label>About you<textarea name="bio" minlength="15" maxlength="500" required placeholder="Your experience and pet care approach"></textarea></label><button type="submit">Save profile</button><button type="button" style="background:#77867e" onclick="document.getElementById('sitterDialog').close()">Cancel</button></form><p id="sitterMessage" role="status"></p></dialog><dialog id="bookingDialog"><h2>Request booking</h2><p id="bookingSitterName"></p><form id="bookingForm"><label>Date<input type="date" name="booking_date" required></label><label>Tell the sitter about your pet<textarea name="message" minlength="10" maxlength="1000" required></textarea></label><button type="submit">Send request</button> <button type="button" onclick="document.getElementById('bookingDialog').close()">Cancel</button></form><p id="bookingMessage" role="status"></p></dialog><dialog id="bookingsDashboard"><h2>My Bookings</h2><div id="bookingList"></div><button type="button" onclick="document.getElementById('bookingsDashboard').close()">Close</button></dialog><dialog id="profileDialog"><button type="button" id="closeProfile" style="float:right;background:#71877c">Close</button><div id="profileContent"></div></dialog><dialog id="authDialog" class="authpanel"><h2>Welcome to PawLocal</h2><p>Sign up or log in to your account.</p><form id="authForm"><label>Email<input id="authEmail" type="email" required autocomplete="email"></label><label>Password<input id="authPassword" type="password" minlength="6" required autocomplete="current-password"></label><button type="button" id="signUpBtn">Sign up</button><button type="submit">Log in</button><button type="button" onclick="document.getElementById('authDialog').close()" style="background:#71877c">Close</button></form><p class="status" id="authMessage" role="status"></p></dialog><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+
+.profile-tags{display:flex;flex-wrap:wrap;gap:6px;margin:12px 4px}
+.profile-tag{font-size:12px;padding:5px 10px;border-radius:30px;background:#fff0e7;color:#854135}
+.profile-tag.experience{background:#eee5f1;color:#64496d}
+.profile-facts{padding:16px;background:#f8efe9;border-radius:14px;margin:18px 0}
+.profile-facts h3{font-size:14px;margin:8px 0 4px}.profile-facts p{margin:0 0 12px;font-size:14px}
+fieldset.profile-options{min-width:0;border:1px solid var(--line);border-radius:14px;padding:14px;margin:18px 0}
+.profile-options legend{font-weight:700;font-size:15px;padding:0 5px}
+.choice-group{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 18px}
+.choice-group label{display:flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:10px;padding:8px 11px;margin:0;background:white;font-size:13px;cursor:pointer}
+.choice-group label:has(input:checked){background:#fff0e7;border-color:var(--coral)}
+.choice-group input{width:16px;height:16px;margin:0;accent-color:var(--coral)}
+.profile-options:disabled{opacity:.65}
+#profileExtrasStatus:empty{display:none}
+</style></head><body><header><b class="brand">🐾 PawLocal<span>NZ</span></b><span>Pet care, close to home</span><div class="authbar" id="authBar"><button id="openAuth" type="button" onclick="document.getElementById('authDialog').showModal()">Sign up / Log in</button></div><button id="becomeSitter" type="button" onclick="document.getElementById('sitterDialog').showModal()">Become a Sitter</button></header><section class="hero"><div class="hero-inner"><div class="hero-copy"><strong>Pet care made simple in Auckland</strong><h1>Their new favourite human.<br><em>Just around the corner.</em></h1><p>Book local dog walking, pet sitting and boarding with people who care.</p><button onclick="document.querySelector('#sitters').scrollIntoView({behavior:'smooth'})">Find a pet sitter →</button><small class="hero-note">A little local care. A lot of love.</small></div><div class="hero-illustration" aria-hidden="true"><div class="hero-emoji">🐶</div><span class="hero-heart">♥</span><span class="hero-caption">Good company. Happy paws.</span></div></div></section><div class="trustline"><span>📍 Auckland locals</span><span>🐾 Pet sitting & dog walking</span><span>🗓️ Easy booking requests</span></div><main id="sitters"><section id="realSitters" style="margin-bottom:35px"><span class="section-kicker">Your neighbourhood, their happy place</span><h2>Meet your local pet people</h2><p class="muted">Profiles created by registered members. Identity and experience are not yet verified.</p><div id="realCards" class="grid"></div><p id="sitterLoadStatus" role="status"></p></section><span class="section-kicker">Find their perfect match</span><h2>A little care for every kind of pet</h2><p class="muted">Prototype listings only — people and reviews are fictional.</p><div class="filters"><select id="suburb" onchange="render()"><option value="">All Auckland suburbs</option><option>Mount Eden</option><option>Ponsonby</option><option>Grey Lynn</option><option>Newmarket</option></select><select id="service" onchange="render()"><option value="">All services</option><option>Dog walking</option><option>Pet sitting</option><option>Boarding</option></select><input id="max" type="number" min="0" placeholder="Max NZ$ / session" oninput="render()"><button onclick="reset()">Reset</button></div><div id="cards" class="grid"></div></main><dialog id="booking"><form id="request"><h2 id="bookingTitle">Request a booking</h2><p class="muted">Demo only. No request is actually sent.</p><label>Your name<input name="name" required placeholder="Full name"></label><label>Date<input type="date" name="date" required></label><label>Message<textarea name="message" required placeholder="Tell the sitter about your pet"></textarea></label><button type="submit">Preview request</button> <button type="button" onclick="booking.close()" style="background:#77867e">Cancel</button></form></dialog><footer><b>🐾 PawLocal NZ</b><span>Made for pets. Rooted in your neighbourhood.</span><span>Early prototype · Payments not supported</span></footer><script>const sitters=[{name:"Sophie",suburb:"Mount Eden",service:"Dog walking",rate:25,pet:"🐕",bio:"Gentle neighbourhood walks and plenty of play time."},{name:"James",suburb:"Ponsonby",service:"Pet sitting",rate:35,pet:"🐈",bio:"Home visits for cats and dogs while you're away."},{name:"Mia",suburb:"Grey Lynn",service:"Boarding",rate:55,pet:"🐶",bio:"A calm home-away-from-home for your best friend."},{name:"Liam",suburb:"Newmarket",service:"Dog walking",rate:28,pet:"🦮",bio:"Active walks for energetic pups."},{name:"Olivia",suburb:"Mount Eden",service:"Pet sitting",rate:38,pet:"🐱",bio:"Thoughtful care and regular photo updates."},{name:"Noah",suburb:"Ponsonby",service:"Boarding",rate:60,pet:"🐕‍🦺",bio:"Weekend and overnight stays in a pet-friendly home."}];function render(){let suburb=document.querySelector('#suburb').value,service=document.querySelector('#service').value,max=document.querySelector('#max').value;let data=sitters.filter(s=>(!suburb||s.suburb===suburb)&&(!service||s.service===service)&&(!max||s.rate<=+max));document.querySelector('#cards').innerHTML=data.length?data.map((s,i)=>'<article class="card"><div class="avatar">'+s.pet+'</div><h3>'+s.name+'</h3><p class="muted">📍 '+s.suburb+' · '+s.service+'</p><p>'+s.bio+'</p><p class="price">NZ$'+s.rate+' <small>/ session</small></p><button onclick="book(\''+s.name+'\')">Request booking</button></article>').join(''):'<p>No sitters match these filters.</p>'}function reset(){document.querySelector('#suburb').value='';document.querySelector('#service').value='';document.querySelector('#max').value='';render()}function book(name){document.querySelector('#bookingTitle').textContent='Request '+name;document.querySelector('#booking').showModal()}document.querySelector('#request').addEventListener('submit',e=>{e.preventDefault();alert('Demo request previewed! No message was sent.');document.querySelector('#booking').close()});render()</script><dialog id="sitterDialog"><h2>Become a Sitter</h2><p class="muted">Create or update your public profile. Do not share your full address.</p><form id="sitterForm"><label>Display name<input name="display_name" minlength="2" maxlength="80" required></label><label>Suburb<select name="suburb" required><option>Mount Eden</option><option>Ponsonby</option><option>Grey Lynn</option><option>Newmarket</option><option>Other Auckland</option></select></label><label>Service<select name="service" required><option>Dog walking</option><option>Pet sitting</option><option>Boarding</option></select></label><label>Rate (NZ$ per session)<input name="rate_nzd" type="number" min="1" max="1000" required></label><label>Profile photo (JPG, PNG or WebP, maximum 5 MB)<input name="photo" type="file" accept="image/jpeg,image/png,image/webp"></label><fieldset id="profileExtras" class="profile-options" disabled><legend>Care &amp; availability</legend>
+<span id="petsLabel">Pets you care for</span><div class="choice-group" role="group" aria-labelledby="petsLabel">
+<label><input type="checkbox" name="pet_types" value="Dogs">Dogs</label><label><input type="checkbox" name="pet_types" value="Cats">Cats</label><label><input type="checkbox" name="pet_types" value="Small pets">Small pets</label></div>
+<label>Years of pet care experience<input type="number" name="experience_years" min="0" max="80" step="1" placeholder="Optional"></label>
+<span id="daysLabel">Usually available on</span><div class="choice-group" role="group" aria-labelledby="daysLabel">
+<label><input type="checkbox" name="available_days" value="1">Mon</label><label><input type="checkbox" name="available_days" value="2">Tue</label><label><input type="checkbox" name="available_days" value="3">Wed</label><label><input type="checkbox" name="available_days" value="4">Thu</label><label><input type="checkbox" name="available_days" value="5">Fri</label><label><input type="checkbox" name="available_days" value="6">Sat</label><label><input type="checkbox" name="available_days" value="7">Sun</label></div><p class="muted">Optional, public details. These are your usual days, not confirmed booking availability.</p></fieldset><p id="profileExtrasStatus" class="muted" role="status"></p><label>About you<textarea name="bio" minlength="15" maxlength="500" required placeholder="Your experience and pet care approach"></textarea></label><button type="submit">Save profile</button><button type="button" style="background:#77867e" onclick="document.getElementById('sitterDialog').close()">Cancel</button></form><p id="sitterMessage" role="status"></p></dialog><dialog id="bookingDialog"><h2>Request booking</h2><p id="bookingSitterName"></p><form id="bookingForm"><label>Date<input type="date" name="booking_date" required></label><label>Tell the sitter about your pet<textarea name="message" minlength="10" maxlength="1000" required></textarea></label><button type="submit">Send request</button> <button type="button" onclick="document.getElementById('bookingDialog').close()">Cancel</button></form><p id="bookingMessage" role="status"></p></dialog><dialog id="bookingsDashboard"><h2>My Bookings</h2><div id="bookingList"></div><button type="button" onclick="document.getElementById('bookingsDashboard').close()">Close</button></dialog><dialog id="profileDialog"><button type="button" id="closeProfile" style="float:right;background:#71877c">Close</button><div id="profileContent"></div></dialog><dialog id="authDialog" class="authpanel"><h2>Welcome to PawLocal</h2><p>Sign up or log in to your account.</p><form id="authForm"><label>Email<input id="authEmail" type="email" required autocomplete="email"></label><label>Password<input id="authPassword" type="password" minlength="6" required autocomplete="current-password"></label><button type="button" id="signUpBtn">Sign up</button><button type="submit">Log in</button><button type="button" onclick="document.getElementById('authDialog').close()" style="background:#71877c">Close</button></form><p class="status" id="authMessage" role="status"></p></dialog><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
 (function(){
 const bar=document.getElementById('authBar');
@@ -92,8 +111,43 @@ const profileDialog=document.getElementById('profileDialog');document.getElement
 if(!window.supabase){authMessage.textContent='Unable to load authentication service. Please try again.';return;}
 const api=window.supabase.createClient('https://zzvkgzkzuehdvgfsyatg.supabase.co','sb_publishable_G7xWeKjrEGuF8rGFN4GRYg_52-yWArF');
 let user=null, pendingSitter=false, pendingBooking=null, bookingSitter=null;
+let extendedProfiles=true;
+const baseProfileFields='user_id,display_name,suburb,service,rate_nzd,bio,photo_path';
+const extraProfileFields=',pet_types,experience_years,available_days';
+const dayNames=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+async function readProfiles(ownId){
+ const query=()=>{
+  let q=api.from('sitter_profiles').select(baseProfileFields+(extendedProfiles?extraProfileFields:''));
+  return ownId?q.eq('user_id',ownId).maybeSingle():q.order('created_at',{ascending:false}).limit(100);
+ };
+ let result=await query();
+ if(extendedProfiles&&result.error&&['42703','PGRST204'].includes(result.error.code)){
+  extendedProfiles=false;result=await query();
+ }
+ return result;
+}
+function careTags(p){
+ const tags=document.createElement('div');tags.className='profile-tags';
+ for(const pet of (p.pet_types||[])){
+  if(!['Dogs','Cats','Small pets'].includes(pet))continue;
+  const tag=document.createElement('span');tag.className='profile-tag';tag.textContent=pet;tags.append(tag);
+ }
+ if(Number.isInteger(p.experience_years)){
+  const tag=document.createElement('span');tag.className='profile-tag experience';
+  tag.textContent=p.experience_years===0?'Less than 1 year of experience':p.experience_years+' '+(p.experience_years===1?'year':'years')+' of experience';tags.append(tag);
+ }
+ return tags;
+}
+function careFacts(p){
+ const box=document.createElement('section');box.className='profile-facts';
+ const days=(p.available_days||[]).filter(d=>Number.isInteger(d)&&d>=1&&d<=7).sort((a,b)=>a-b);
+ const title=document.createElement('h3');title.textContent='Usual availability';
+ const value=document.createElement('p');value.textContent=days.length?days.map(d=>dayNames[d-1]).join(', '):'Ask the sitter about their availability.';
+ const note=document.createElement('small');note.textContent='Self-reported details. Confirm dates and pet care needs with the sitter.';
+ box.append(title,value,note);return box;
+}
 function setUser(next){
- user=next;bar.replaceChildren();
+ user=next;bar.replaceChildren();sitterButton.textContent=user?'My sitter profile':'Become a Sitter';
  if(user){
   const name=document.createElement('span');name.textContent=user.email||'Signed in';
   const logout=document.createElement('button');logout.textContent='Log out';
@@ -106,11 +160,23 @@ function setUser(next){
 }
 async function showSitter(){
  if(!user){pendingSitter=true;authDialog.showModal();return;}
- sitterMessage.textContent='';sitterForm.reset();
- const {data,error}=await api.from('sitter_profiles').select('display_name,suburb,service,rate_nzd,bio').eq('user_id',user.id).maybeSingle();
- if(error)sitterMessage.textContent=error.message;
- if(data){for(const k of ['display_name','suburb','service','rate_nzd','bio'])sitterForm.elements.namedItem(k).value=data[k]}
+ sitterMessage.textContent='Loading your profile…';sitterForm.reset();
+ const btn=sitterForm.querySelector('[type="submit"]');btn.disabled=true;
+ const extras=document.getElementById('profileExtras');extras.disabled=true;
  sitterDialog.showModal();
+ try{
+  const {data,error}=await readProfiles(user.id);
+  if(error)throw error;
+  if(data){
+   for(const k of ['display_name','suburb','service','rate_nzd','bio'])sitterForm.elements.namedItem(k).value=data[k];
+   sitterForm.elements.namedItem('experience_years').value=data.experience_years??'';
+   for(const input of sitterForm.querySelectorAll('[name="pet_types"]'))input.checked=(data.pet_types||[]).includes(input.value);
+   for(const input of sitterForm.querySelectorAll('[name="available_days"]'))input.checked=(data.available_days||[]).includes(Number(input.value));
+  }
+  extras.disabled=!extendedProfiles;
+  document.getElementById('profileExtrasStatus').textContent=extendedProfiles?'':'Extra profile details are temporarily unavailable. You can still save your basic profile.';
+  sitterMessage.textContent='';btn.disabled=false;
+ }catch(error){sitterMessage.textContent='Could not load your profile. Close and try again. '+error.message;}
 }
 sitterButton.onclick=showSitter;
 document.getElementById('signUpBtn').onclick=async()=>{
@@ -129,8 +195,15 @@ authForm.onsubmit=async e=>{
 sitterForm.onsubmit=async e=>{
  e.preventDefault();if(!user){sitterMessage.textContent='Please log in first.';return;}
  const btn=sitterForm.querySelector('[type="submit"]');btn.disabled=true;sitterMessage.textContent='Saving…';
- const values=Object.fromEntries(new FormData(sitterForm).entries());
+ try{
+ const formData=new FormData(sitterForm);
+ const values=Object.fromEntries(formData.entries());
  const payload={user_id:user.id,display_name:values.display_name.trim(),suburb:values.suburb,service:values.service,rate_nzd:Number(values.rate_nzd),bio:values.bio.trim()};
+ if(extendedProfiles){
+  payload.pet_types=formData.getAll('pet_types');
+  payload.experience_years=values.experience_years===''?null:Number(values.experience_years);
+  payload.available_days=formData.getAll('available_days').map(Number);
+ }
  const file=sitterForm.elements.namedItem('photo').files[0];
  if(file){
   if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>5242880){sitterMessage.textContent='Use a JPG, PNG or WebP image under 5 MB.';btn.disabled=false;return;}
@@ -144,11 +217,13 @@ sitterForm.onsubmit=async e=>{
  btn.disabled=false;
  if(error){sitterMessage.textContent=error.message;return;}
  sitterDialog.close();await loadSitters();
+ }catch(error){sitterMessage.textContent='Could not save your profile. Please try again. '+error.message;}
+ finally{btn.disabled=false;}
 };
 async function loadSitters(){
  const status=document.getElementById('sitterLoadStatus');const cards=document.getElementById('realCards');
  status.textContent='Loading profiles…';
- const {data,error}=await api.from('sitter_profiles').select('user_id,display_name,suburb,service,rate_nzd,bio,photo_path').order('created_at',{ascending:false}).limit(100);
+ const {data,error}=await readProfiles();
  cards.replaceChildren();
  if(error){status.textContent='Could not load sitter profiles: '+error.message;return;}
  status.textContent=data.length?'':'No sitter profiles yet.';
@@ -160,7 +235,7 @@ async function loadSitters(){
   const bio=document.createElement('p');bio.textContent=p.bio;
   const price=document.createElement('p');price.className='price';price.textContent='NZ$'+p.rate_nzd+' / session';
   const view=document.createElement('button');view.textContent='View profile';view.addEventListener('click',()=>showProfile(p));
-  card.append(photo,h,loc,bio,price,view);cards.append(card);
+  card.append(photo,h,loc,careTags(p),bio,price,view);cards.append(card);
  }
 }
 function makePhoto(p){
@@ -175,7 +250,7 @@ function showProfile(p){
  const bio=document.createElement('p');bio.textContent=p.bio;
  const price=document.createElement('h3');price.textContent='NZ$'+p.rate_nzd+' per session';
  const note=document.createElement('p');note.className='muted';note.textContent='Sitter identity is not verified. Do not send payments or sensitive information through this prototype.';
- content.append(makePhoto(p),heading,loc,price,bio,note);const book=document.createElement('button');book.textContent='Request booking';book.onclick=()=>{profileDialog.close();requestBooking(p)};content.append(book);profileDialog.showModal();
+ content.append(makePhoto(p),heading,loc,careTags(p),price,bio,careFacts(p),note);const book=document.createElement('button');book.textContent='Request booking';book.onclick=()=>{profileDialog.close();requestBooking(p)};content.append(book);profileDialog.showModal();
 }
 
 function requestBooking(p){
